@@ -7,7 +7,7 @@ let isClocked:boolean = false
 let isClockedOnSite:boolean = false
 let isHomeoffice:boolean = false
 let isFortbildung:boolean = false
-let isAvailable = ref<boolean>(false)
+let isAvailable = ref<boolean>(true)
 
 const isAvailableComp = computed({
     get(){
@@ -49,7 +49,7 @@ function onChangeClockOut(){
 
 <template>
     <div class="mx-8 gap-4 h-[85%] grid grid-cols-[1.7fr_1.5fr_1.2fr] grid-rows-[repeat(7,_1fr)] items-stretch justify-items-stretch">
-        <div class="userClock__wrapper text-center row-start-2 row-end-7 col-start-1 col-end-1 bg-slate-600 rounded-[2.5rem] p-8 grid grid-cols[1fr_4fr_1fr] grid-rows-[1fr_1fr_1fr_1fr]">
+        <div class="shadow-xl userClock__wrapper text-center row-start-2 row-end-7 col-start-1 col-end-1 bg-slate-600 rounded-[2.5rem] p-8 grid grid-cols[1fr_4fr_1fr] grid-rows-[1fr_1fr_1fr_1fr]">
             <button :disabled="!isAvailable" @click="onChangeIsClockedOnSite" class="clockIn text-xl font-semibold  bg-green-200 h-5/6 my-auto w-5/6 mx-auto rounded-[2.5rem] border-2 border-green-400 hover:shadow hover:border-[6px] hover:text-lg hover:font-medium transition-all disabled:bg-red-50 disabled:border-red-200 disabled:line-through disabled:hover:border-2 disabled:hover:font-semibold disabled:hover:text-xl">
                 <p class="">Einstempeln</p>
             </button>
@@ -63,10 +63,8 @@ function onChangeClockOut(){
                 <p class="">Ausstempeln</p>
             </button>
         </div>
-        <div class="bg-slate-600 text-white row-start-2 row-end-6 col-start-2 col-end-2 rounded-[2.5rem] grid grid-cols[1fr_4fr_1fr] grid-rows-[1fr_1fr_1fr_1fr] p-8">
-            <div class="self-center"> Eingestempelt seit: </div>
-            <div class=""></div>
-            <div class=""></div>
+        <div class="shadow-xl bg-slate-600 text-white row-start-2 row-end-6 col-start-2 col-end-2 rounded-[2.5rem] grid grid-cols[1fr] grid-rows-[1fr_1fr] grid-flow-row p-8">
+            <div class="self-start"> Buchungen: </div>
             <div class=""></div>
         </div>
     </div>

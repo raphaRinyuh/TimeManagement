@@ -5,9 +5,6 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: true,
     strict: true,
-    tsConfig: {
-      
-    }
   },
   vite: {
     css: {

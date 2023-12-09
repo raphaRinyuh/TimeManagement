@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String            @id @default(uuid()) @db.Uuid
+  name             String            @db.VarChar(255)
+  email            String            @unique @db.VarChar(255)
+  passwordId       String            @unique @db.Uuid
+  password         Password          @relation(fields: [passwordId], references: [id])
+  isSupervisor     Boolean           @default(false) @db.Boolean
+  departments      UserDepartment[]
+  vacationRequests VacationRequest[] @relation("requestingUser")
+  approvedRequests VacationRequest[] @relation("approvedByUser")
+
+  createdAt DateTime @default(now())
+}
+
+model Password {
+  id       String @id @default(uuid()) @db.Uuid
+  password String @db.VarChar(255)
+  user     User?
+
+  createdAt DateTime @default(now())
+}
+
+model Department {
+  id    String           @id @default(uuid()) @db.Uuid
+  name  String           @db.VarChar(255)
+  users UserDepartment[]
+
+  createdAt DateTime @default(now())
+}
+
+model UserDepartment {
+  user         User       @relation(fields: [userId], references: [id])
+  userId       String @db.Uuid
+  department   Department @relation(fields: [departmentId], references: [id])
+  departmentId String @db.Uuid
+
+  @@id([userId, departmentId])
+}
+
+model VacationRequest {
+  id               String   @id @default(uuid()) @db.Uuid
+  DateFrom         DateTime @db.Date
+  DateUntil        DateTime @db.Date
+  isApproved       Boolean  @default(false) @db.Boolean
+  requestingUserId String @db.Uuid
+  requestingUser   User     @relation(fields: [requestingUserId], references: [id], name: "requestingUser")
+  approvedByUserId String? @db.Uuid
+  approvedByUser   User?    @relation(fields: [approvedByUserId], references: [id], name: "approvedByUser")
+
+  createdAt DateTime @default(now())
+}

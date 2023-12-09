@@ -6,26 +6,27 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id               String            @id @default(uuid()) @db.Uuid
+  id               String            @id @default(uuid())
   name             String            @db.VarChar(255)
   email            String            @unique @db.VarChar(255)
-  passwordId       String            @unique @db.Uuid
+  passwordId       String            @unique
   password         Password          @relation(fields: [passwordId], references: [id])
-  isSupervisor     Boolean           @default(false) @db.Boolean
+  isSupervisor     Boolean           @default(false)
   departments      UserDepartment[]
   vacationRequests VacationRequest[] @relation("requestingUser")
   approvedRequests VacationRequest[] @relation("approvedByUser")
+  auth Auth?
 
   createdAt DateTime @default(now())
 }
 
 model Password {
-  id       String @id @default(uuid()) @db.Uuid
+  id       String @id @default(uuid())
   password String @db.VarChar(255)
   user     User?
 
@@ -33,7 +34,7 @@ model Password {
 }
 
 model Department {
-  id    String           @id @default(uuid()) @db.Uuid
+  id    String           @id @default(uuid())
   name  String           @db.VarChar(255)
   users UserDepartment[]
 
@@ -42,22 +43,31 @@ model Department {
 
 model UserDepartment {
   user         User       @relation(fields: [userId], references: [id])
-  userId       String @db.Uuid
+  userId       String 
   department   Department @relation(fields: [departmentId], references: [id])
-  departmentId String @db.Uuid
+  departmentId String 
 
   @@id([userId, departmentId])
 }
 
 model VacationRequest {
-  id               String   @id @default(uuid()) @db.Uuid
+  id               String   @id @default(uuid())
   DateFrom         DateTime @db.Date
   DateUntil        DateTime @db.Date
-  isApproved       Boolean  @default(false) @db.Boolean
-  requestingUserId String @db.Uuid
+  isApproved       Boolean  @default(false)
+  requestingUserId String
   requestingUser   User     @relation(fields: [requestingUserId], references: [id], name: "requestingUser")
-  approvedByUserId String? @db.Uuid
+  approvedByUserId String?
   approvedByUser   User?    @relation(fields: [approvedByUserId], references: [id], name: "approvedByUser")
 
   createdAt DateTime @default(now())
+}
+
+model Auth {
+  id String @id @default(uuid())
+  token String @default(cuid())
+  refreshToken String @default(cuid())
+  userid String @unique
+  duration DateTime
+  user User @relation(fields: [userid] , references: [id])
 }

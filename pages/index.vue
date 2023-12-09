@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useFetch } from 'nuxt/app';
 import { computed } from 'vue';
 import { ref } from 'vue';
 
@@ -8,6 +9,15 @@ let isClockedOnSite:boolean = false
 let isHomeoffice:boolean = false
 let isFortbildung:boolean = false
 let isAvailable = ref<boolean>(true)
+
+let date2 = new Date(Date.now())
+const log1 = date2.getTime();
+date2.setMinutes(date2.getMinutes() + 5)
+const log2 = date2.getTime();
+
+const difference = console.log((log2 - log1) / 60 / 1000)
+
+// const test = new Date(Date.now()).getTime - new Date(Date.now()).setTime()
 
 const isAvailableComp = computed({
     get(){

@@ -4,7 +4,15 @@ const prisma = new PrismaClient()
 export default defineEventHandler(async (event) => {
     const body = await readBody(event) satisfies Required<dbUser>
     try {
-        
+        if(!validateEmail(body.email)){
+            const response:ApiState = {
+                status: "Error",
+                error: "The Email Address is invalid"
+            }
+
+            return response
+        }
+
         const data = await prisma.user.create({
             data:{
                 name: body.name,
@@ -26,7 +34,7 @@ export default defineEventHandler(async (event) => {
     } catch (e) {
         const response: ApiState = {
             status: "Error",
-            error: e
+            error: (e as object).toString()
 
         }
         return response
@@ -34,3 +42,11 @@ export default defineEventHandler(async (event) => {
 
 
 })
+
+function validateEmail(email:string): boolean {
+    var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if(email.match(validRegex)){
+        return true
+    }
+    return false
+}

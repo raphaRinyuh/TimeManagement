@@ -11,7 +11,7 @@ type PendingApiState = {
 
 type ErrorApiState = {
     status: "Error"
-    error: string | unknown
+    error: string
 }
 
 type dbUser = {
@@ -20,7 +20,7 @@ type dbUser = {
     email?:string,
     isSupervisor?:boolean,
     createdAt?: Date,
-    password?:dbPassword
+    password:dbPassword
 }
 
 type dbPassword = {
@@ -45,4 +45,21 @@ type dbVacationRequest = {
     requestingUser?: dbUser
     approvedByUserId?: string,
     approvedByUser?: dbUser
+}
+
+type AuthState = AuthStateValid | AuthStateRefreshed | AuthStateInvalid
+
+type AuthStateValid = {
+    status: "Valid",
+    token: string
+}
+
+type AuthStateRefreshed = {
+    status: "Valid",
+    state: "refreshed",
+    token: string
+}
+
+type AuthStateInvalid = {
+    status: "Invalid"
 }
